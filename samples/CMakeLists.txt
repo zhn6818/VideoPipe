@@ -9,6 +9,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 add_executable(1-1-1_sample "1-1-1_sample.cpp")
 target_link_libraries(1-1-1_sample ${PROJECT_NAME})
 
+add_executable(rtsp_file "rtsp_file.cpp")
+target_link_libraries(rtsp_file ${PROJECT_NAME})
+
 add_executable(1-1-N_sample "1-1-N_sample.cpp")
 target_link_libraries(1-1-N_sample ${PROJECT_NAME})
 
