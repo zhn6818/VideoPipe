@@ -160,3 +160,4 @@ build/*
 !build/build.sh
 vp_data/
 build-release/
+vp_analysis_board.png
