@@ -47,6 +47,16 @@ set (GST_DEPEND_LIBS ${GST_LIBRARIES} ${GSTAPP_LIBRARIES} ${GST_RTSP_LIBRARIES})
 list(APPEND VP_DEPEND_LIBS ${OpenCV_LIBS} ${GST_DEPEND_LIBS} stdc++fs)
 
 # optional for CUDA
+# Note: trt_vehicle 的节点(经 base_model.h)会间接 #include <cuda_runtime.h>，
+# 故只要 VP_WITH_TRT 开启，主库同样需要 CUDA 头路径；与 trt_vehicle/CMakeLists.txt 写法一致。
+if(VP_WITH_CUDA OR VP_WITH_TRT)
+    find_package(CUDA REQUIRED)
+    include_directories(${CUDA_INCLUDE_DIRS})
+    list(APPEND VP_DEPEND_LIBS ${CUDA_LIBRARIES})
+    message(STATUS "CUDA library status:")
+    message(STATUS "     version: ${CUDA_VERSION}")
+    message(STATUS "     include path: ${CUDA_INCLUDE_DIRS}")
+endif()
 if(VP_WITH_CUDA) # CUDA enabled
     add_definitions(-DVP_WITH_CUDA)
 endif()

@@ -11,7 +11,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+.claude/
 # model and video
 *.cfg
 *.onnx
@@ -158,3 +158,5 @@ cmake-build-debug-remote/
 cmake-build-debug/
 build/*
 !build/build.sh
+vp_data/
+build-release/

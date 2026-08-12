@@ -1,92 +1,130 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // VideoPipe 调试配置（Ubuntu + CUDA + TensorRT，cppdbg/gdb，单 build/ 目录）
+    // 用法：打开 samples/*.cpp 任一文件，按 F5 即「自动编译 → 启动调试」对应的 build/bin/<文件名> 可执行。
+    //
+    // 前置条件：
+    //   1. vp_data 目录：sample 用相对路径 ./vp_data/... 读取模型与测试视频，放到 cwd（默认 ${workspaceFolder}）。
+    //   2. X11 显示：含 screen_des_node 的样例需要 DISPLAY，见 doc/mac_x11_imshow_guide.md。
+    //      经 SSH X11 转发时，保持一个 ssh -Y 终端开着，DISPLAY 取其 echo $DISPLAY 的值（通常 localhost:10.0）。
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "debug samples for videopipe",  // debug for samples in videopipe
+            "name": "debug samples for videopipe",  // 主用：自动编译 + 启动当前文件对应的 build/bin 可执行
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/${fileBasenameNoExtension}",
-            "args": [""],
+            "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/..",  // change this value to the path of your vp_data
-            "environment": [],
+            "cwd": "${workspaceFolder}",  // vp_data 所在目录，按需修改
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${workspaceFolder}/build/libs:${workspaceFolder}/build/bin:/opt/3rdparty/opencv/lib:/opt/3rdparty/onnxruntime/lib:/usr/local/cuda/lib64:/usr/lib/x86_64-linux-gnu:${env:LD_LIBRARY_PATH}"
+                },
+                {
+                    "name": "DISPLAY",
+                    "value": "localhost:10.0"
+                }
+            ],
             "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [
-              {
-                "description": "Enable pretty-printing for gdb",
-                "text": "-enable-pretty-printing",
-                "ignoreFailures": true
-              }
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
             ],
-            "preLaunchTask": ""
+            "preLaunchTask": "build all"
         },
         {
-          "name": "debug complex samples for videopipe",  // debug for complex samples in videopipe
-          "type": "cppdbg",
-          "request": "launch",
-          "program": "${fileDirname}/${fileBasenameNoExtension}",
-          "args": ["../../.."],  // change this value to the path of your vp_data
-          "stopAtEntry": false,
-          "cwd": "${fileDirname}",
-          "environment": [],
-          "externalConsole": false,
-          "MIMode": "gdb",
-          "miDebuggerPath": "/usr/bin/gdb",
-          "setupCommands": [
-            {
-              "description": "Enable pretty-printing for gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-            }
-          ],
-          "preLaunchTask": ""
+            "name": "debug complex samples for videopipe",  // 复杂样例
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",  // vp_data 所在目录，按需修改
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${workspaceFolder}/build/libs:${workspaceFolder}/build/bin:/opt/3rdparty/opencv/lib:/opt/3rdparty/onnxruntime/lib:/usr/local/cuda/lib64:/usr/lib/x86_64-linux-gnu:${env:LD_LIBRARY_PATH}"
+                },
+                {
+                    "name": "DISPLAY",
+                    "value": "localhost:10.0"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build all"
         },
         {
-          "name": "debug trt_yolov8 samples",  // debug for trt samples at third_party/trt_yolov8
-          "type": "cppdbg",
-          "request": "launch",
-          "program": "${workspaceFolder}/third_party/trt_yolov8/build/samples/${fileBasenameNoExtension}",
-          "args": [""],
-          "stopAtEntry": false,
-          "cwd": "${workspaceFolder}/..",
-          "environment": [],
-          "externalConsole": false,
-          "MIMode": "gdb",
-          "miDebuggerPath": "/usr/bin/gdb",
-          "setupCommands": [
-            {
-              "description": "Enable pretty-printing for gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-            }
-          ],
-          "preLaunchTask": ""
+            "name": "debug trt_yolov8 samples",  // 调试 trt_yolov8 样例（standalone 构建，需先在 third_party/trt_yolov8 单独 cmake 编译）
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/third_party/trt_yolov8/build/samples/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${workspaceFolder}/build/libs:/opt/3rdparty/opencv/lib:/usr/local/cuda/lib64:/usr/lib/x86_64-linux-gnu:${env:LD_LIBRARY_PATH}"
+                },
+                {
+                    "name": "DISPLAY",
+                    "value": "localhost:10.0"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         },
         {
-          "name": "debug trt_vehicle samples",  // debug for trt samples at third_party/trt_vehicle
-          "type": "cppdbg",
-          "request": "launch",
-          "program": "${workspaceFolder}/third_party/trt_vehicle/build/samples/${fileBasenameNoExtension}",
-          "args": [""],
-          "stopAtEntry": false,
-          "cwd": "${workspaceFolder}/..",
-          "environment": [],
-          "externalConsole": false,
-          "MIMode": "gdb",
-          "miDebuggerPath": "/usr/bin/gdb",
-          "setupCommands": [
-            {
-              "description": "Enable pretty-printing for gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-            }
-          ],
-          "preLaunchTask": ""
+            "name": "debug trt_vehicle samples",  // 调试 trt_vehicle 样例（standalone 构建，需先在 third_party/trt_vehicle 单独 cmake 编译）
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/third_party/trt_vehicle/build/samples/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${workspaceFolder}/build/libs:/opt/3rdparty/opencv/lib:/usr/local/cuda/lib64:/usr/lib/x86_64-linux-gnu:${env:LD_LIBRARY_PATH}"
+                },
+                {
+                    "name": "DISPLAY",
+                    "value": "localhost:10.0"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }
