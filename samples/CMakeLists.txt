@@ -105,6 +105,9 @@ target_link_libraries(vp_test ${PROJECT_NAME})
 if(VP_WITH_JHCV)
     add_executable(jhcv_detector_sample "jhcv_detector_sample.cpp")
     target_link_libraries(jhcv_detector_sample ${PROJECT_NAME})
+
+    add_executable(rtsp_file_jhcv "rtsp_file_jhcv.cpp")
+    target_link_libraries(rtsp_file_jhcv ${PROJECT_NAME})
 endif()
 
 # samples depend on Kafka
