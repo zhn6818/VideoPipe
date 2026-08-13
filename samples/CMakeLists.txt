@@ -102,6 +102,11 @@ target_link_libraries(yolov5_seg_sample ${PROJECT_NAME})
 add_executable(vp_test "vp_test.cpp")
 target_link_libraries(vp_test ${PROJECT_NAME})
 
+if(VP_WITH_JHCV)
+    add_executable(jhcv_detector_sample "jhcv_detector_sample.cpp")
+    target_link_libraries(jhcv_detector_sample ${PROJECT_NAME})
+endif()
+
 # samples depend on Kafka
 if(VP_WITH_KAFKA)
     add_executable(message_broker_kafka_sample "message_broker_kafka_sample.cpp")

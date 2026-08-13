@@ -1,0 +1,4 @@
+[submodule "nodes/jhcv_lib"]
+	path = nodes/jhcv_lib
+	url = https://gitee.com/wang-sen-09/jhcv_lib.git
+	branch = new

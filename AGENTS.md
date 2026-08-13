@@ -1,13 +1,13 @@
 <claude-mem-context>
 # Memory Context
 
-# [VideoPipe] recent context, 2026-08-12 10:07pm GMT+8
+# [VideoPipe] recent context, 2026-08-13 10:04am GMT+8
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 12 obs (1,633t read) | 0t work
+Stats: 16 obs (1,995t read) | 0t work
 
 ### Aug 11, 2026
 5996 10:13p ✅ Docker环境扩展以同时支持jhcv_lib和VideoPipe项目
@@ -23,4 +23,9 @@ Stats: 12 obs (1,633t read) | 0t work
 6010 9:40p 🔴 RTSP视频保存绿屏问题调查
 6011 " 🔵 rtsp_file内存持续增长问题
 6012 9:58p 🔴 VideoPipe无界队列导致内存持续增长修复
+### Aug 13, 2026
+6013 8:08a 🔄 jhcv_lib构建系统重构以支持作为子工程集成
+6014 8:17a 🔴 jhcv_lib构建变量向后兼容性修复
+6024 9:37a ⚖️ jhcv_lib集成架构决策修正
+6025 9:47a ⚖️ 采用Git Submodule架构集成jhcv_lib到VideoPipe
 </claude-mem-context>

@@ -11,6 +11,7 @@
                 "-DCMAKE_BUILD_TYPE=Debug",
                 "-DVP_WITH_CUDA=ON",
                 "-DVP_WITH_TRT=ON",
+                "-DVP_WITH_JHCV=ON",
                 "-DOpenCV_DIR=/opt/3rdparty/opencv/lib/cmake/opencv4"
             ],
             "problemMatcher": [],

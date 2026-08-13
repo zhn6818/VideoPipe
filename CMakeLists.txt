@@ -23,6 +23,11 @@ option(VP_WITH_LLM "prepared LLM or not?" OFF)
 option(VP_WITH_FFMPEG "prepared FFMPEG or not?" OFF)
 option(VP_BUILD_COMPLEX_SAMPLES "build complex samples or not? (maybe source code not provided)" OFF)
 
+# Optional JHDeepCore/jhcv_lib integration. The complete jhcv_lib project is
+# kept as a Git submodule under nodes/jhcv_lib; VideoPipe provides the outer
+# build wiring and node adapters.
+option(VP_WITH_JHCV "Enable jhcv_lib-backed VideoPipe nodes" OFF)
+
 # OpenCV required
 find_package(OpenCV REQUIRED)
 message(STATUS "OpenCV library status:")
@@ -123,6 +128,32 @@ if(VP_WITH_FFMPEG)
     list(APPEND VP_DEPEND_LIBS avcodec avformat avdevice swscale swresample avutil)
 endif()
 
+# optional jhcv_lib submodule
+if(VP_WITH_JHCV)
+    set(VP_JHCV_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/nodes/jhcv_lib")
+    if(NOT EXISTS "${VP_JHCV_SOURCE_DIR}/CMakeLists.txt")
+        message(FATAL_ERROR
+            "VP_WITH_JHCV=ON, but the jhcv_lib submodule is missing. "
+            "Run: git submodule update --init --recursive")
+    endif()
+
+    # Keep the submodule's CUDA mode consistent with VideoPipe's GPU setup.
+    if(VP_WITH_CUDA OR VP_WITH_TRT)
+        set(JHCV_ENABLE_CUDA ON CACHE BOOL
+            "Enable CUDA/TensorRT GPU support for jhcv_lib" FORCE)
+    else()
+        set(JHCV_ENABLE_CUDA OFF CACHE BOOL
+            "Enable CUDA/TensorRT GPU support for jhcv_lib" FORCE)
+    endif()
+    # jhcv_lib tests are built from its own standalone project/tasks, not as
+    # part of VideoPipe's node library.
+    set(JHCV_BUILD_TEST OFF CACHE BOOL
+        "Build jhcv_lib test programs" FORCE)
+
+    add_subdirectory("${VP_JHCV_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/nodes/jhcv_lib")
+    list(APPEND VP_DEPEND_LIBS jhcv_lib)
+endif()
+
 # tinyexpr
 message("-------------start build tinyexpr--------------")
 add_subdirectory(third_party/tinyexpr)
@@ -168,6 +199,9 @@ message("-------------collect version info--------------")
 
 # collect source files for videopipe
 file(GLOB_RECURSE NODES "nodes/*.cpp")
+# jhcv_lib is a complete submodule and is built by its own CMake target when
+# enabled. Never compile its sources through VideoPipe's recursive source glob.
+list(FILTER NODES EXCLUDE REGEX "[/\\\\]nodes[/\\\\]jhcv_lib[/\\\\]")
 file(GLOB_RECURSE OBJECTS "objects/*.cpp")
 file(GLOB_RECURSE UTILS "utils/*.cpp")
 #...#
@@ -175,6 +209,9 @@ list(APPEND VP_CPPS_SOURCES ${NODES} ${OBJECTS} ${UTILS})
 
 # build for videopipe
 add_library(${PROJECT_NAME} SHARED ${VP_CPPS_SOURCES})
+if(VP_WITH_JHCV)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC VP_WITH_JHCV)
+endif()
 target_link_libraries(${PROJECT_NAME} ${VP_DEPEND_LIBS})
 
 # build for samples
